@@ -1,0 +1,37 @@
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import linear_kernel
+
+# Load movie data from CSV file
+file_path = r"C:\Users\LIKHIT.000\Desktop\data analytics project1\top10K-TMDB-movies.csv"
+movies = pd.read_csv(file_path)
+
+# Function to get movie recommendations based on movie overview
+def get_movie_recommendations(movie_title, previous_movies):
+    # Exclude previously mentioned movies and the input movie
+    df_excluded = movies[(~movies['title'].isin(previous_movies)) & (movies['title'] != movie_title)]
+
+    # Use TF-IDF Vectorizer to convert the movie overviews into numerical data
+    tfidf_vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = tfidf_vectorizer.fit_transform(df_excluded['overview'].fillna(''))
+
+    # Calculate the cosine similarity between movies
+    cosine_similarities = linear_kernel(tfidf_matrix, tfidf_vectorizer.transform([movies[movies['title'] == movie_title]['overview'].iloc[0]]))
+
+    # Get the indices of movies sorted by similarity
+    similar_movies_indices = cosine_similarities.flatten().argsort()[::-1]
+
+    # Get movie titles based on similarity
+    similar_movies = df_excluded.iloc[similar_movies_indices]['title'].head(5).tolist()
+
+    return similar_movies
+
+# User input
+selected_movie = input("Enter the title of the movie: ")
+
+# Call the function for the initial movie
+recommendations = get_movie_recommendations(selected_movie, [])
+
+print("\nTop 5 Recommended Movies:")
+for i, recommendation in enumerate(recommendations):
+    print(f"{i + 1}. {recommendation}")

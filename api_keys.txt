@@ -1,0 +1,5 @@
+// for code
+https://api.themoviedb.org/3/movie/{}?api_key=dec4731f59413ae816d86ea96c1b1677&language=en-US
+
+// for reference (postman)
+https://api.themoviedb.org/3/movie/550?api_key=dec4731f59413ae816d86ea96c1b1677

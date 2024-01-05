@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Movie Recommendation System</h2>
+        <form id="movieForm">
+            <label for="movie1">Movie 1:</label>
+            <input type="text" id="movie1" name="movie1" required><br>
+
+            <label for="movie2">Movie 2:</label>
+            <input type="text" id="movie2" name="movie2" required><br>
+
+            <label for="movie3">Movie 3:</label>
+            <input type="text" id="movie3" name="movie3" required><br>
+
+            <button type="button" onclick="submitForm()">Submit</button>
+        </form>
+        <div id="result"></div>
+
+        <script>
+            function submitForm() {
+                // Get user inputs
+                const movie1 = document.getElementById("movie1").value;
+                const movie2 = document.getElementById("movie2").value;
+                const movie3 = document.getElementById("movie3").value;
+
+                // Create a JSON object with user inputs
+                const userData = {
+                    movie1: movie1,
+                    movie2: movie2,
+                    movie3: movie3
+                };
+
+                // Send user data to the server
+                fetch('/saveUserData', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("result").innerText = data.message;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        </script>
+    </div>
+</body>
+</html>
